@@ -9,7 +9,7 @@ h2 {
   color: #333;
 }
 
-select, input, button {
+select, input, button, #hasil {
   display: block;
   margin: 10px auto;
   padding: 8px;
@@ -27,14 +27,6 @@ button {
 
 button:hover {
   background: #0056b3;
-}
-
-#hasil {
-  margin-top: 20px;
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 
