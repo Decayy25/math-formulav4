@@ -56,6 +56,12 @@ window.onload = function () {
         <label>Masukkan Data (pisahkan dengan koma):</label><br>
         <textarea id="dataInput" rows="4" cols="50" placeholder="Contoh: 10, 20, 30, 40"></textarea><br>
         <button onclick="hitungData()">Hitung Statistik</button>`;
+    } else if (r === "statitiska data kelompok") {
+      html = `
+        <label>Masukkan Data Kelompok (pisahkan dengan koma):</label><br>
+        <textarea id="dataKelompokInput" rows="4" cols="50" placeholder="Contoh: 10-20, 21-30, 31-40"></textarea><br>
+        <textarea id="frekuensiInput" rows="4" cols="50" placeholder="Masukkan frekuensi masing-masing kelas, pisahkan dengan koma: Contoh: 5, 10, 15"></textarea><br>
+        <button onclick="hitungDataKelompok()">Hitung Statistik Kelompok</button>`;
     } else {
       html = `<p>Pilih rumus untuk menampilkan input.</p>  
       `;
@@ -99,6 +105,8 @@ function hitung() {
     hasil = 0.5 * massa.value * kecepatan.value ** 2;
   } else if (r === "tekanan") {
     hasil = gaya.value / luas.value;
+  } else {
+    hasil = "-";
   }
 
   hasilBox.innerText = `Hasil : ${hasil}`;
@@ -242,4 +250,43 @@ function hitungData() {
   `;
 
   hasilDiv.innerHTML = html;
+}
+
+//===================== Data Kelompok ======================
+function hitungDataKelompok() {
+  const data_input = document.getElementById("dataKelompokInput").value;
+  const frekuensi_input = document.getElementById("frekuensiInput").value;
+  const hasil_div = document.getElementById("hasil");
+
+  const kelas = data_input.split(',').map(k => k.trim());
+  const frek = frekuensi_input.split(',').map(f => parseInt(f.trim()));
+
+  if (kelas.length !== frek.length || kelas.length === 0) {
+    hasil_div.innerHTML = "<p style='color:red'>Input tidak valid!</p>";
+    return;
+  }
+
+  // cari kelas modus
+  const fm = Math.max(...frek);
+  const idx = frek.indexOf(fm);
+
+  const [tb, ta] = kelas[idx].split('-').map(Number);
+  const L = tb - 0.5;
+  const p = ta - tb + 1;
+
+  const f1 = idx > 0 ? frek[idx - 1] : 0;
+  const f2 = idx < frek.length - 1 ? frek[idx + 1] : 0;
+
+  const d1 = fm - f1;
+  const d2 = fm - f2;
+
+  const modus = L + ((d1 / (d1 + d2)) * p);
+
+  hasil_div.innerHTML = `
+    <h3>Hasil Statistik Data Kelompok</h3>
+    <table>
+      <tr><th>Kelas Modus</th><td>${kelas[idx]}</td></tr>
+      <tr><th>Modus</th><td>${modus.toFixed(2)}</td></tr>
+    </table>
+  `;
 }
